@@ -1,13 +1,10 @@
 import mongoose from "mongoose";
 
  async function connect(
-  db_user: string,
-  db_pass: string,
-  db_host: string,
-  db_name: string
+mongoURL:string
 ) {
   try {
-    const mongoDBConnectionString = `mongodb+srv://${db_user}:${db_pass}@${db_host}/${db_name}?retryWrites=true&w=majority`;
+    const mongoDBConnectionString = mongoURL;
 
     await mongoose.connect(mongoDBConnectionString).then(
    ()=>{console.log("Connected to DB");
@@ -28,17 +25,15 @@ import mongoose from "mongoose";
 
 export async function startServer() {
     try {
-        const db_user = process.env.DB_USER;
-        const db_pass = process.env.DB_PASS;
-        const db_host = process.env.DB_HOST;
-        const db_name = process.env.DB_NAME;
+        const db = process.env.mongoURL;
+        
   
-        if (db_user === undefined || db_pass === undefined || db_host === undefined || db_name === undefined) {
+        if (db === undefined ) {
             return ("Error in database connection");
         }
   
         // Connect to MongoDB
-        await connect(db_user, db_pass, db_host, db_name);
+        await connect(db);
   
     } catch (error) {
         console.log("Error Connecting to Database", error);
